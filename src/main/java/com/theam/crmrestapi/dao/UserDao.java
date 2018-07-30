@@ -46,8 +46,12 @@ public class UserDao {
      */
     @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
-        Query query = entityManager.createQuery("SELECT u FROM User u");
+//        Query query = entityManager.createQuery("SELECT u FROM User u");
+//        return (List<User>) query.getResultList();
+
+        Query query = entityManager.createNamedQuery("User.findAll", User.class);
         return (List<User>) query.getResultList();
+
     }
 
     public void update (User user) {entityManager.merge(user); }

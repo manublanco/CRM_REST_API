@@ -45,7 +45,10 @@ public class CustomerDao {
      */
     @SuppressWarnings("unchecked")
     public List<Customer> getAllCustomers() {
-        Query query = entityManager.createQuery("SELECT c FROM Customer c");
+//        Query query = entityManager.createQuery("SELECT c FROM Customer c");
+//        return (List<Customer>) query.getResultList();
+
+        Query query = entityManager.createNamedQuery("Customer.findAll", Customer.class);
         return (List<Customer>) query.getResultList();
     }
 

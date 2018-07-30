@@ -8,6 +8,7 @@ import java.util.Date;
 @Entity
 @Proxy(lazy = false)
 @Table(name = "CRM_CUSTOMERS")
+@NamedQuery(name="Customer.findAll", query="SELECT c FROM Customer c")
 public class Customer {
 
     @Id
