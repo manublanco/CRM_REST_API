@@ -51,11 +51,11 @@ public class CustomerResource {
         if (token == null) {
             throw new UnauthorizedException();
         } else {
-            User user = customerService.findCustomerById(id);
-            if (user == null) {
+            Customer customer = customerService.findCustomerById(id);
+            if (customer == null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
             }
-            return Response.status(200).entity(user)
+            return Response.status(200).entity(customer)
                     .contentLocation(new URI("/customer/" + id))
                     .build();
         }
@@ -78,7 +78,7 @@ public class CustomerResource {
             throw new UnauthorizedException();
         } else {
             //TODO
-            if (customer.getUsername() == null || customer.getPassword() == null) {
+            if (customer.getName() == null || customer.getSurname() == null) {
                 return Response.status(400).entity("Please provide all mandatory inputs").build();
             }
 
@@ -102,8 +102,8 @@ public class CustomerResource {
                 customer.setName(customerChanges.getName());
             }
 
-            if (customerChanges.getPassword() != null) {
-                customer.setPassword(customerChanges.getPassword());
+            if (customerChanges.getSurname() != null) {
+                customer.setSurname(customerChanges.getSurname());
             }
 
             customerService.updateCustomer(customer);
@@ -119,7 +119,7 @@ public class CustomerResource {
         } else {
             Boolean eliminated = customerService.deleteCustomerById(id);
             if (!eliminated) {
-                return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
+                return Response.status(Response.Status.NOT_FOUND).entity("Customer not found with ID: " + id).build();
             }
             return Response.status(200).build();
         }

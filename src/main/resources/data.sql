@@ -31,12 +31,17 @@ Insert into CRM_USERS
 Insert into CRM_USERS
   (ID_USER, NAME, SURNAME, ROLE, USERNAME, PASSWORD)
   VALUES
-    (3, 'Peter', 'Parker', 'CUSTOMER', 'Spidey', '1234');
+    (3, 'Peter', 'Parker', 'USER', 'Spidey', '1234');
 
 
 Insert into CRM_CUSTOMERS
-  (CREATIONDATE,PHOTOFIELD,ID_USER,CREATEDBY)
+  (ID_CUSTOMER, NAME, SURNAME, CREATIONDATE,PHOTOFIELD,CREATEDBY)
   values
-    (CURRENT_DATE,'https://vignette.wikia.nocookie.net/avengers-assemble/images/7/77/Ultimate_Spiderman_1.jpg/revision/latest?cb=20160522155142',3,1);
+    (1, 'Mary Jane', 'Parker', CURRENT_DATE,'https://vignette.wikia.nocookie.net/avengers-assemble/images/7/77/Ultimate_Spiderman_1.jpg/revision/latest?cb=20160522155142',3);
 
+
+Insert into CRM_CUSTOMERS
+  (ID_CUSTOMER, NAME, SURNAME, CREATIONDATE,PHOTOFIELD,CREATEDBY)
+  values
+    (2, 'May', 'Parker', CURRENT_DATE,'https://vignette.wikia.nocookie.net/avengers-assemble/images/7/77/Ultimate_Spiderman_1.jpg/revision/latest?cb=20160522155142',3);
 

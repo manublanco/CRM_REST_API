@@ -29,33 +29,26 @@ public class UserResource {
     UserService userService;
 
     private static final String USER = "USER";
+    private static final String ADMIN = "ADMIN";
 
     @GET
     @Produces("application/json")
-    public List<User> getAllUsers(@HeaderParam("x-access-token") String token) {
-        if (token == null) {
-            throw new UnauthorizedException();
-        } else {
-            return userService.findAllUsers();
-        }
+    public List<User> getAllUsers() {
+        return userService.findAllUsers();
     }
 
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response getUserById(@PathParam("id") int id, @HeaderParam("x-access-token") String token) throws URISyntaxException {
+    public Response getUserById(@PathParam("id") int id) throws URISyntaxException {
 
-        if (token == null) {
-            throw new UnauthorizedException();
-        } else {
-            User user = userService.findUserById(id);
-            if (user == null) {
-                return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
-            }
-            return Response.status(200).entity(user)
-                    .contentLocation(new URI("/user/" + id))
-                    .build();
+        User user = userService.findUserById(id);
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
         }
+        return Response.status(200).entity(user)
+                .contentLocation(new URI("/user/" + id))
+                .build();
     }
 
     /**
@@ -69,64 +62,82 @@ public class UserResource {
      */
     @POST
     @Consumes("application/json")
-    public Response createUser(User user, @HeaderParam("x-access-token") String token) throws URISyntaxException {
+    public Response createUser(User user) throws URISyntaxException {
 
-        if (token == null) {
-            throw new UnauthorizedException();
-        } else {
-
-            if (user.getName() == null || user.getPassword() == null) {
-                return Response.status(400).entity("Please provide all mandatory inputs").build();
-            }
-            if (user.getRole() == null) {
-                user.setRole(USER);
-            } else {
-                user.setRole(user.getRole());
-            }
-            userService.createUser(user);
-            return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+        if (user.getName() == null || user.getSurname() == null ) {
+            return Response.status(400).entity("Please provide all mandatory inputs").build();
         }
+        //the user is always created with the role "USER"
+        //if we need to make him "ADMIN" we have to use the "makeAdmin" endpoint
+        user.setRole(USER);
+        userService.createUser(user);
+
+        return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+
     }
 
     @PUT
     @Path("/{id}")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response updateUser(@PathParam("id") int id, User userChanges, @HeaderParam("x-access-token") String token) throws URISyntaxException {
-        if (token == null) {
-            throw new UnauthorizedException();
-        } else {
-            User user = userService.findUserById(id);
+    public Response updateUser(@PathParam("id") int id, User userChanges) throws URISyntaxException {
 
-            if (userChanges.getName() != null) {
-                user.setName(userChanges.getName());
-            }
-
-            if (userChanges.getPassword() != null) {
-                user.setPassword(userChanges.getPassword());
-            }
-
-            if (userChanges.getRole() != null) {
-                user.setRole(userChanges.getRole());
-            }
-
-
-            userService.updateUser(user);
-            return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+        User user = userService.findUserById(id);
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
         }
+
+        if (userChanges.getName() != null) {
+            user.setName(userChanges.getName());
+        }
+
+        if (userChanges.getSurname() != null) {
+            user.setSurname(userChanges.getSurname());
+        }
+
+        if (userChanges.getRole() != null) {
+            user.setRole(userChanges.getRole());
+        }
+
+        userService.updateUser(user);
+
+        return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deleteUserById(@HeaderParam("x-access-token") String token, @PathParam("id") int id) {
-        if (token == null) {
-            throw new UnauthorizedException();
-        } else {
-            Boolean eliminated = userService.deleteUserById(id);
+    public Response deleteUserById(@PathParam("id") int id) {
+
+        Boolean eliminated = userService.deleteUserById(id);
+
             if (!eliminated) {
-                return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
+                return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
             }
             return Response.status(200).build();
-        }
     }
+
+    @PUT
+    @Path("/{id}/isAdmin/{isAdmin}")
+    @Produces("application/json")
+    public Response changeRole(@PathParam("id") int id, @PathParam("isAdmin") boolean isAdmin) throws URISyntaxException {
+
+
+        User user = userService.findUserById(id);
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
+        }
+
+        if (isAdmin) {
+            user.setRole(ADMIN);
+        } else {
+            user.setRole(USER);
+        }
+
+        userService.updateUser(user);
+
+        return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+
+    }
+
 }

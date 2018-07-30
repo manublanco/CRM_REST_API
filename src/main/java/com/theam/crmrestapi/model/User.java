@@ -13,7 +13,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "ID_USER", nullable = false)
     private int id;
 
@@ -26,10 +26,10 @@ public class User {
     @Column(name ="ROLE", nullable = false)
     private String role;
 
-    @Column(name = "USERNAME", nullable = false)
+    @Column(name = "USERNAME")
     private String username;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "PASSWORD")
     private String password;
 
 

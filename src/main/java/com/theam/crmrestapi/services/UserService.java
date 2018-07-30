@@ -26,9 +26,6 @@ public class UserService {
         return userDao.getUserById(id);
     }
 
-    public User findUserByNameAndPassword(String name, String password) {
-        return userDao.getUserByNameAndPassword(name, password);
-    }
 
     /**
      * Creates the user.

@@ -8,8 +8,18 @@ import java.util.Date;
 @Entity
 @Proxy(lazy = false)
 @Table(name = "CRM_CUSTOMERS")
-@PrimaryKeyJoinColumn(name="ID_USER")
-public class Customer extends User {
+public class Customer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_CUSTOMER", nullable = false)
+    private int id;
+
+    @Column(name = "NAME", nullable = false)
+    private String name;
+
+    @Column(name = "SURNAME", nullable = false)
+    private String surname;
 
     @Column(name = "PHOTOFIELD")
     private String photoField;
@@ -27,6 +37,30 @@ public class Customer extends User {
 
     @Column(name = "LASTUPDATE")
     private Date lastUpdate;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
     public String getPhotoField() {
         return photoField;

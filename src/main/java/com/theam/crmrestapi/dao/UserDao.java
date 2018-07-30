@@ -50,19 +50,6 @@ public class UserDao {
         return (List<User>) query.getResultList();
     }
 
-    public User getUserByNameAndPassword(String name, String password) {
-
-        User user = null;
-        try{
-            user = (User) entityManager.createQuery("SELECT u FROM U∫ser u where u.name = :name and u.password = :password")
-                    .setParameter("name", name)
-                    .setParameter("password", password)
-                    .getSingleResult();
-        } catch (NoResultException nre){}
-
-        return user;
-    }
-
     public void update (User user) {entityManager.merge(user); }
 
     @Transactional
