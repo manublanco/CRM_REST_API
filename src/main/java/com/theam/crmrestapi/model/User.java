@@ -23,28 +23,18 @@ public class User {
     @Column(name = "SURNAME", nullable = false)
     private String surname;
 
+    @Column(name ="ROLE", nullable = false)
+    private String role;
+
     @Column(name = "USERNAME", nullable = false)
     private String username;
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE })
-    @JoinTable(name = "CRM_USER_ROLES", joinColumns = @JoinColumn(name = "ID_USER"), inverseJoinColumns = @JoinColumn(name = "ID_ROLE"))
-    private Set<Role> roles;
-
 
     public User() {
 
-    }
-
-    public User(String name) {
-        this.name = name;
-    }
-
-    public User(String name, Set<Role> roles) {
-        this.name = name;
-        this.roles = roles;
     }
 
     public int getId() {
@@ -87,11 +77,11 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

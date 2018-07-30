@@ -1,8 +1,6 @@
 package com.theam.crmrestapi.services;
 
-import com.theam.crmrestapi.dao.RoleDao;
 import com.theam.crmrestapi.dao.UserDao;
-import com.theam.crmrestapi.model.Role;
 import com.theam.crmrestapi.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +15,6 @@ public class UserService {
     /** The user dao. */
     @Autowired
     UserDao userDao;
-
-
-    /** The role dao. */
-    @Autowired
-    RoleDao roleDao;
 
 
     public List<User> findAllUsers() {
@@ -48,40 +41,13 @@ public class UserService {
         userDao.create(user);
     }
 
-    /**
-     * Gets the role by name.
-     *
-     * @param roleName
-     *            the role name
-     * @return the role by name
-     */
-    public Role getRoleByName(String roleName) {
-        return roleDao.getRoleByName(roleName);
-
-    }
-
-    /**
-     * Gets the role id.
-     *
-     * @param id
-     *            the id
-     * @return the role id
-     */
-    public Role getRoleId(int id) {
-        return roleDao.getRoleById(id);
-
-    }
 
     public void updateUser(User user) {
         userDao.update(user);
     }
 
 
-    public List<Role> findAllRoles() {
-
-        return roleDao.getAllRoles();
+    public boolean deleteUserById(int id) {
+        return userDao.delete(id);
     }
-
-
-
 }

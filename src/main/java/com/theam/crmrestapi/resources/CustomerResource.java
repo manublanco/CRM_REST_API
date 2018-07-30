@@ -1,8 +1,9 @@
 package com.theam.crmrestapi.resources;
 
-
 import com.theam.crmrestapi.exceptions.UnauthorizedException;
+import com.theam.crmrestapi.model.Customer;
 import com.theam.crmrestapi.model.User;
+import com.theam.crmrestapi.services.CustomerService;
 import com.theam.crmrestapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,77 +15,75 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-
+import java.util.Set;
 
 /**
- * The Class UserResource.
+ * The Class CustomerResource.
  */
+
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlRootElement(name = "user")
-@Path("/user")
-public class UserResource {
+@XmlRootElement(name = "customer")
+@Path("/customer")
+public class CustomerResource {
+    /** The customer service. */
+    @Autowired
+    CustomerService customerService;
 
     /** The user service. */
     @Autowired
     UserService userService;
 
-    private static final String USER = "USER";
-
     @GET
     @Produces("application/json")
-    public List<User> getAllUsers(@HeaderParam("x-access-token") String token) {
+    public List<Customer> getAllCustomers(@HeaderParam("x-access-token") String token) {
         if (token == null) {
             throw new UnauthorizedException();
         } else {
-            return userService.findAllUsers();
+            return customerService.findAllCustomers();
         }
     }
 
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response getUserById(@PathParam("id") int id, @HeaderParam("x-access-token") String token) throws URISyntaxException {
+    public Response getCustomerById(@PathParam("id") int id, @HeaderParam("x-access-token") String token) throws URISyntaxException {
 
         if (token == null) {
             throw new UnauthorizedException();
         } else {
-            User user = userService.findUserById(id);
+            User user = customerService.findCustomerById(id);
             if (user == null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
             }
             return Response.status(200).entity(user)
-                    .contentLocation(new URI("/user/" + id))
+                    .contentLocation(new URI("/customer/" + id))
                     .build();
         }
     }
 
     /**
-     * Creates the user.
+     * Creates the customer.
      *
-     * @param user
-     *            the user
+     * @param customer
+     *            the customer
      * @return the response
      * @throws URISyntaxException
      *             the URI syntax exception
      */
     @POST
     @Consumes("application/json")
-    public Response createUser(User user, @HeaderParam("x-access-token") String token) throws URISyntaxException {
+    public Response createCustomer(Customer customer, @HeaderParam("x-access-token") String token) throws URISyntaxException {
 
         if (token == null) {
             throw new UnauthorizedException();
         } else {
-
-            if (user.getName() == null || user.getPassword() == null) {
+            //TODO
+            if (customer.getUsername() == null || customer.getPassword() == null) {
                 return Response.status(400).entity("Please provide all mandatory inputs").build();
             }
-            if (user.getRole() == null) {
-                user.setRole(USER);
-            } else {
-                user.setRole(user.getRole());
-            }
-            userService.createUser(user);
-            return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+
+            customerService.createCustomer(customer);
+            return Response.status(201).contentLocation(new URI("/customer/" + customer.getId())).build();
         }
     }
 
@@ -92,37 +91,33 @@ public class UserResource {
     @Path("/{id}")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response updateUser(@PathParam("id") int id, User userChanges, @HeaderParam("x-access-token") String token) throws URISyntaxException {
+    public Response updateCustomer(@PathParam("id") int id, Customer customerChanges, @HeaderParam("x-access-token") String token) throws URISyntaxException {
         if (token == null) {
             throw new UnauthorizedException();
         } else {
-            User user = userService.findUserById(id);
 
-            if (userChanges.getName() != null) {
-                user.setName(userChanges.getName());
+            Customer customer = customerService.findCustomerById(id);
+
+            if (customerChanges.getName() != null) {
+                customer.setName(customerChanges.getName());
             }
 
-            if (userChanges.getPassword() != null) {
-                user.setPassword(userChanges.getPassword());
+            if (customerChanges.getPassword() != null) {
+                customer.setPassword(customerChanges.getPassword());
             }
 
-            if (userChanges.getRole() != null) {
-                user.setRole(userChanges.getRole());
-            }
-
-
-            userService.updateUser(user);
-            return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+            customerService.updateCustomer(customer);
+            return Response.status(201).contentLocation(new URI("/customer/" + customer.getId())).build();
         }
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deleteUserById(@HeaderParam("x-access-token") String token, @PathParam("id") int id) {
+    public Response deleteCustomerById(@HeaderParam("x-access-token") String token, @PathParam("id") int id) {
         if (token == null) {
             throw new UnauthorizedException();
         } else {
-            Boolean eliminated = userService.deleteUserById(id);
+            Boolean eliminated = customerService.deleteCustomerById(id);
             if (!eliminated) {
                 return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
             }

@@ -3,6 +3,7 @@ package com.theam.crmrestapi.dao;
 
 import com.theam.crmrestapi.model.User;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -64,5 +65,14 @@ public class UserDao {
 
     public void update (User user) {entityManager.merge(user); }
 
+    @Transactional
+    public boolean delete(int id) {
 
+        User user = getUserById(id);
+        if (user != null) {
+            entityManager.remove(user);
+            return true;
+        }
+        return false;
+    }
 }

@@ -19,35 +19,24 @@ Insert into CRM_ROLES
    (3, 'CUSTOMER');
 
 Insert into CRM_USERS
-  (ID_USER, NAME, SURNAME, USERNAME, PASSWORD)
+  (ID_USER, NAME, SURNAME, ROLE, USERNAME, PASSWORD)
   VALUES
-    (1, 'Tony', 'Stark', 'Stark', '1234');
+    (1, 'Tony', 'Stark', 'ADMIN','Stark', '1234');
 
 Insert into CRM_USERS
-  (ID_USER, NAME, SURNAME, USERNAME, PASSWORD)
+  (ID_USER, NAME, SURNAME, ROLE, USERNAME, PASSWORD)
   VALUES
-    (2, 'Steve', 'Rogers', 'Captain', '1234');
+    (2, 'Steve', 'Rogers', 'USER', 'Captain', '1234');
 
 Insert into CRM_USERS
-  (ID_USER, NAME, SURNAME, USERNAME, PASSWORD)
+  (ID_USER, NAME, SURNAME, ROLE, USERNAME, PASSWORD)
   VALUES
-    (3, 'Peter', 'Parker', 'Spidey', '1234');
+    (3, 'Peter', 'Parker', 'CUSTOMER', 'Spidey', '1234');
 
 
-
-Insert into CRM_USER_ROLES
-   (ID_USER,ID_ROLE)
-Values
-   (1,1);
-
-Insert into CRM_USER_ROLES
-   (ID_USER,ID_ROLE)
-Values
-   (2,2);
-
-Insert into CRM_USER_ROLES
-   (ID_USER,ID_ROLE)
-Values
-   (3,3);
+Insert into CRM_CUSTOMERS
+  (CREATIONDATE,PHOTOFIELD,ID_USER,CREATEDBY)
+  values
+    (CURRENT_DATE,'https://vignette.wikia.nocookie.net/avengers-assemble/images/7/77/Ultimate_Spiderman_1.jpg/revision/latest?cb=20160522155142',3,1);
 
 
