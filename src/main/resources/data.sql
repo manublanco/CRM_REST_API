@@ -44,4 +44,3 @@ Insert into CRM_CUSTOMERS
   (ID_CUSTOMER, NAME, SURNAME, CREATIONDATE,PHOTOFIELD,CREATEDBY)
   values
     (2, 'May', 'Parker', CURRENT_DATE,'https://vignette.wikia.nocookie.net/avengers-assemble/images/7/77/Ultimate_Spiderman_1.jpg/revision/latest?cb=20160522155142',3);
-

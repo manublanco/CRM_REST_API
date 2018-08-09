@@ -1,11 +1,11 @@
 package com.theam.crmrestapi.resources;
 
 
-import com.theam.crmrestapi.exceptions.UnauthorizedException;
 import com.theam.crmrestapi.model.User;
 import com.theam.crmrestapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -33,6 +33,7 @@ public class UserResource {
 
     @GET
     @Produces("application/json")
+    @RolesAllowed("ADMIN")
     public List<User> getAllUsers() {
         return userService.findAllUsers();
     }
@@ -40,6 +41,7 @@ public class UserResource {
     @GET
     @Path("/{id}")
     @Produces("application/json")
+    @RolesAllowed("ADMIN")
     public Response getUserById(@PathParam("id") int id) throws URISyntaxException {
 
         User user = userService.findUserById(id);
@@ -62,6 +64,7 @@ public class UserResource {
      */
     @POST
     @Consumes("application/json")
+    @RolesAllowed("ADMIN")
     public Response createUser(User user) throws URISyntaxException {
 
         if (user.getName() == null || user.getSurname() == null ) {
@@ -80,6 +83,7 @@ public class UserResource {
     @Path("/{id}")
     @Consumes("application/json")
     @Produces("application/json")
+    @RolesAllowed("ADMIN")
     public Response updateUser(@PathParam("id") int id, User userChanges) throws URISyntaxException {
 
         User user = userService.findUserById(id);
@@ -107,6 +111,7 @@ public class UserResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("ADMIN")
     public Response deleteUserById(@PathParam("id") int id) {
 
         Boolean eliminated = userService.deleteUserById(id);
@@ -120,6 +125,7 @@ public class UserResource {
     @PUT
     @Path("/{id}/isAdmin/{isAdmin}")
     @Produces("application/json")
+    @RolesAllowed("ADMIN")
     public Response changeRole(@PathParam("id") int id, @PathParam("isAdmin") boolean isAdmin) throws URISyntaxException {
 
 

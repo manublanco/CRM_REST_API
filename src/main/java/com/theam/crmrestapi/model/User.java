@@ -10,7 +10,11 @@ import java.util.Set;
 @Proxy(lazy = false)
 @Inheritance(strategy=InheritanceType.JOINED)
 @Table(name = "CRM_USERS")
-@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
+@NamedQueries(
+        {@NamedQuery(name="User.findAll", query="SELECT u FROM User u"),
+         @NamedQuery(name="User.findByUsername", query="SELECT u FROM User u WHERE u.username=:username")}
+)
+
 public class User {
 
     @Id

@@ -39,6 +39,11 @@ public class UserDao {
         return entityManager.find(User.class, id);
     }
 
+    public User getUserByUsername(String username) {
+        Query query = entityManager.createNamedQuery("User.findByUsername", User.class);
+        query.setParameter("username", username);
+        return (User) query.getSingleResult();    }
+
     /**
      * Gets the all users.
      *
@@ -46,8 +51,6 @@ public class UserDao {
      */
     @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
-//        Query query = entityManager.createQuery("SELECT u FROM User u");
-//        return (List<User>) query.getResultList();
 
         Query query = entityManager.createNamedQuery("User.findAll", User.class);
         return (List<User>) query.getResultList();
