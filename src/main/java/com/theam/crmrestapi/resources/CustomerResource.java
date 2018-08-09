@@ -68,6 +68,8 @@ public class CustomerResource {
     @RolesAllowed({"ADMIN","USER"})
     public Response createCustomer(Customer customer) throws URISyntaxException {
 
+        
+
         //TODO
         if (customer.getName() == null || customer.getSurname() == null) {
             return Response.status(400).entity("Please provide all mandatory inputs").build();

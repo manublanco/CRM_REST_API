@@ -2,9 +2,9 @@ package com.theam.crmrestapi.model;
 
 
 import org.hibernate.annotations.Proxy;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Proxy(lazy = false)
@@ -23,18 +23,23 @@ public class User {
     private int id;
 
     @Column(name = "NAME", nullable = false)
+    @SafeHtml
     private String name;
 
     @Column(name = "SURNAME", nullable = false)
+    @SafeHtml
     private String surname;
 
     @Column(name ="ROLE", nullable = false)
+    @SafeHtml
     private String role;
 
     @Column(name = "USERNAME")
+    @SafeHtml
     private String username;
 
     @Column(name = "PASSWORD")
+    @SafeHtml
     private String password;
 
 
