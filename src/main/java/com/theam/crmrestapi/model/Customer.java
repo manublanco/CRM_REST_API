@@ -4,7 +4,7 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Proxy(lazy = false)
