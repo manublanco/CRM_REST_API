@@ -4,6 +4,7 @@ import com.theam.crmrestapi.model.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
@@ -43,9 +44,13 @@ public class UserDao {
      * @return the User by username
      */
     public User getUserByUsername(String username) {
-        Query query = entityManager.createNamedQuery("User.findByUsername", User.class);
-        query.setParameter("username", username);
-        return (User) query.getSingleResult();
+        try{
+            Query query = entityManager.createNamedQuery("User.findByUsername", User.class);
+            query.setParameter("username", username);
+            return (User) query.getSingleResult();
+        } catch(NoResultException e) {
+            return null;
+        }
     }
 
     /**
