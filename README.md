@@ -128,6 +128,15 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 #### Change role
 #### PUT http://localhost:8080/user/{id}/isAdmin/{isAdmin}
 
+PUT request in Postman.
+
+You only need to specify the id of the user and change {isAdmin} to true if you want to grant ADMIN role or to false if you want to grant USER role. 
+
+Examples:
+
+* http://localhost:8080/user/1/isAdmin/false   -> The user 1 will have USER role.
+* http://localhost:8080/user/1/isAdmin/true    -> The user 1 will haver ADMIN role.  
+
 ## Customer endpoints
 
 This endpoints are accesible by ADMINS and USERS.
