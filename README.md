@@ -87,7 +87,7 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 #### Create User
 #### POST http://localhost:8080/user/
 
-To create an user you have to send a POST request with a JSON in the body. So, in POSTMAN you have to select POST request and then in the body part, select raw and application/json and insert a JSON like this: 
+To create an user you have to send a POST request with a JSON in the body. So, in POSTMAN you have to select POST request and then in the body part, select raw, application/json and insert a JSON like this: 
 ```javascript
 {
     "name": "Hank",
@@ -97,14 +97,33 @@ To create an user you have to send a POST request with a JSON in the body. So, i
 }
 ```
 
+
 The username has to be unique, so if the username is already taken the endpoint will show a 400 Bad Request with the message "Username already taken"
 
+All the fields are required, so if you forgot to put a field the endpoint will show a 400 Bad Request with the message "Please provide all mandatory inputs"
+
+By default, all users are created with the USER role.
 
 #### Update User
 #### PUT http://localhost:8080/user/{id}
 
+Select a PUT request in Postman.
+
+To update the user with the id {id} you have to send a JSON like when you created the user but only with the fields that you want to change. Example with id=4 
+
+```javascript
+{
+    "username": "Ant-man"
+}
+```
+If the user with that id doesn' exist you will receive a 404 Error with the message "User not found for ID: 1"
+
+
 #### Delete User
 #### DELETE http://localhost:8080/user/{id}
+
+Select DELETE request in Postman and you only have to specified the id of the user you want to delete. 
+If the user with that id doesn' exist you will receive a 404 Error with the message "User not found for ID: 1"
 
 #### Change role
 #### PUT http://localhost:8080/user/{id}/isAdmin/{isAdmin}
@@ -193,5 +212,8 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 
 #### Delete Customer
 #### DELETE http://localhost:8080/customer/{id}
+
+Select DELETE request in Postman and you only have to specified the id of the customer you want to delete. 
+If the customer with that id doesn' exist you will receive a 404 Error with the message "Customer not found for ID: 1"
 
 
