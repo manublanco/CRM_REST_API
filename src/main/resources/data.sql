@@ -20,10 +20,10 @@ Insert into CRM_USERS
 Insert into CRM_CUSTOMERS
   (ID_CUSTOMER, NAME, SURNAME, CREATIONDATE,PHOTOFIELD,CREATEDBY)
   values
-    (1, 'Mary Jane', 'Parker', CURRENT_DATE,'https://storage.cloud.google.com/crm-rest-api-images/maryjane.jpg?_ga=2.72422747.-977466062.1534120210',3);
+    (1, 'Mary Jane', 'Parker', CURRENT_DATE,'https://www.googleapis.com/download/storage/v1/b/crm-theam-rest-api-images/o/maryjane.jpeg?generation=1534242512296495&alt=media',3);
 
 
 Insert into CRM_CUSTOMERS
   (ID_CUSTOMER, NAME, SURNAME, CREATIONDATE,PHOTOFIELD,CREATEDBY)
   values
-    (2, 'May', 'Parker', CURRENT_DATE,'https://storage.cloud.google.com/crm-rest-api-images/MayParker.jpg?_ga=2.203931352.-977466062.1534120210',3);
+    (2, 'May', 'Parker', CURRENT_DATE,'https://www.googleapis.com/download/storage/v1/b/crm-theam-rest-api-images/o/MayParker.jpg?generation=1534242512421260&alt=media',3);

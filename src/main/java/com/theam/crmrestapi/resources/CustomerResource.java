@@ -166,7 +166,7 @@ public class CustomerResource {
 
   private String uploadToGoogleCloud(InputStream file, String fileName) throws IOException {
 
-      String SERVICE_ACCOUNT_JSON_PATH = "src/main/resources/googleCloud/crm-rest-api-64c3bf662117.json";
+      String SERVICE_ACCOUNT_JSON_PATH = "src/main/resources/googleCloud/crm-rest-api-213309-2cb3273f5d1f.json";
 
       Storage storage =
               StorageOptions.newBuilder()
@@ -181,7 +181,7 @@ public class CustomerResource {
 
       Blob blob =
               storage.create(
-                      BlobInfo.newBuilder("crm-rest-api-images", fileName + ".jpg")
+                      BlobInfo.newBuilder("crm-theam-rest-api-images", fileName + ".jpg")
                               .setContentType("image/jpeg")
                               .setAcl(acls).build(),
                       file);
