@@ -25,6 +25,8 @@ At init 3 different users are created(1 ADMIN and 2 USERS).
 
 To do all the tests I use POSTMAN. Now I am going to explain how to test every endpoint and how to use postman to do it in cases that I think is needed.
 
+All endpoints needs to be authenticated. In Postman you can do this in the section Authorization, then select Basic Authorization and use the credentials of one of the users already created.
+
 
 ### User endpoints
 
@@ -87,7 +89,7 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 #### Create User
 #### POST http://localhost:8080/user/
 
-To create an user you have to send a POST request with a JSON in the body. So, in POSTMAN you have to select POST request and then in the body part, select raw and insert a JSON like this: 
+To create an user you have to send a POST request with a JSON in the body. So, in POSTMAN you have to select POST request and then in the body part, select raw, application/json and insert a JSON like this: 
 ```javascript
 {
     "name": "Hank",
@@ -97,17 +99,45 @@ To create an user you have to send a POST request with a JSON in the body. So, i
 }
 ```
 
+
 The username has to be unique, so if the username is already taken the endpoint will show a 400 Bad Request with the message "Username already taken"
 
+All the fields are required, so if you forgot to put a field the endpoint will show a 400 Bad Request with the message "Please provide all mandatory inputs"
+
+By default, all users are created with the USER role.
 
 #### Update User
 #### PUT http://localhost:8080/user/{id}
 
+Select a PUT request in Postman.
+
+To update the user with the id {id} you have to send a JSON like when you created the user but only with the fields that you want to change. Example with id=4 
+
+```javascript
+{
+    "username": "Ant-man"
+}
+```
+If the user with that id doesn' exist you will receive a 404 Error with the message "User not found for ID: 1"
+
+
 #### Delete User
 #### DELETE http://localhost:8080/user/{id}
 
+Select DELETE request in Postman and you only have to specified the id of the user you want to delete. 
+If the user with that id doesn' exist you will receive a 404 Error with the message "User not found for ID: 1"
+
 #### Change role
 #### PUT http://localhost:8080/user/{id}/isAdmin/{isAdmin}
+
+PUT request in Postman.
+
+You only need to specify the id of the user and change {isAdmin} to true if you want to grant ADMIN role or to false if you want to grant USER role. 
+
+Examples:
+
+* http://localhost:8080/user/1/isAdmin/false   -> The user 1 will have USER role.
+* http://localhost:8080/user/1/isAdmin/true    -> The user 1 will haver ADMIN role.  
 
 ## Customer endpoints
 
@@ -164,6 +194,7 @@ If you send a GET request in POSTMAN to this endpoint, you will receive a list o
 If you send a GET request with a specific id, for instance: http://localhost:8080/customer/1
 
 You will receive a JSON with the information of that particular customer.
+```javascript
 {
     "id": 1,
     "name": "Mary Jane",
@@ -181,6 +212,7 @@ You will receive a JSON with the information of that particular customer.
     "updatedBy": null,
     "lastUpdate": null
 }
+```
 
 If the user with that id doesn' exist you will receive a 404 Error with the message "Customer not found for ID: 1"
 
@@ -188,10 +220,48 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 #### Create Customer
 #### POST http://localhost:8080/customer/
 
+POST request in Postman.
+
+Then you have to select form-data and add two keys, "file"(type file) and "customer" (type text).
+In file, now you have the option to upload an image. This image will be upload to Google Cloud Storage and save the url in the PhotoField of the customer. 
+
+Into the customer key you have to send a JSON like this example:
+```javascript
+{
+    "name": "Natasha",
+    "surname": "Romanova"
+}
+```
+The only fields mandatory are name and surname. 
+
+The file is optional.
+
+The user who created the customer will be stored in the field "CreatedBy".
+
+
 #### Update Customer
 #### PUT http://localhost:8080/customer/{id}
 
+PUT request in Postman.
+
+Then you have to select form-data and add two keys, "file"(type file) and "customer" (type text).
+In file, now you have the option to upload an image. This image will be upload to Google Cloud Storage and save the url in the PhotoField of the customer. 
+
+Into the customer key you have to send a JSON like this example:
+```javascript
+{
+    "surname": "Stark"
+}
+```
+
+Only send the changes, it is not necessary to send all the data. 
+
+The user who updated the customer will be stored in the field "CreatedBy".
+
 #### Delete Customer
 #### DELETE http://localhost:8080/customer/{id}
+
+Select DELETE request in Postman and you only have to specified the id of the customer you want to delete. 
+If the customer with that id doesn' exist you will receive a 404 Error with the message "Customer not found for ID: 1"
 
 
