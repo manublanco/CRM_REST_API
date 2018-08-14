@@ -87,7 +87,7 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 #### Create User
 #### POST http://localhost:8080/user/
 
-To create an user you have to send a POST request with a JSON in the body. So, in POSTMAN you have to select POST request and then in the body part, select raw and insert a JSON like this: 
+To create an user you have to send a POST request with a JSON in the body. So, in POSTMAN you have to select POST request and then in the body part, select raw and application/json and insert a JSON like this: 
 ```javascript
 {
     "name": "Hank",
