@@ -1,12 +1,9 @@
 package com.theam.crmrestapi.dao;
 
 import com.theam.crmrestapi.model.Customer;
-import com.theam.crmrestapi.model.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
@@ -45,16 +42,24 @@ public class CustomerDao {
      */
     @SuppressWarnings("unchecked")
     public List<Customer> getAllCustomers() {
-//        Query query = entityManager.createQuery("SELECT c FROM Customer c");
-//        return (List<Customer>) query.getResultList();
-
         Query query = entityManager.createNamedQuery("Customer.findAll", Customer.class);
         return (List<Customer>) query.getResultList();
     }
 
+    /**
+     * Update the customer
+     *
+     * @param   customer
+     */
+    public void update (Customer customer) {
+        entityManager.merge(customer);
+    }
 
-    public void update (Customer customer) {entityManager.merge(customer); }
-
+    /**
+     * Delete the customer
+     *
+     * @param   id
+     */
     @Transactional
     public boolean delete(int id) {
 

@@ -2,7 +2,6 @@ package com.theam.crmrestapi.model;
 
 import org.hibernate.annotations.Proxy;
 import org.hibernate.validator.constraints.SafeHtml;
-
 import javax.persistence.*;
 import java.sql.Date;
 

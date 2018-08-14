@@ -1,22 +1,5 @@
-DELETE * FROM CRM_ROLES;
 DELETE * FROM CRM_USERS;
-DELETE * FROM CRM_USER_ROLES;
 DELETE * FROM CRM_CUSTOMERS;
-
-Insert into CRM_ROLES
-   (ID_ROLE, NAME)
- Values
-   (1, 'ADMIN');
-
-Insert into CRM_ROLES
-   (ID_ROLE,NAME)
- Values
-   (2, 'USER');
-
-Insert into CRM_ROLES
-    (ID_ROLE, NAME)
- Values
-   (3, 'CUSTOMER');
 
 Insert into CRM_USERS
   (ID_USER, NAME, SURNAME, ROLE, USERNAME, PASSWORD)
@@ -37,10 +20,10 @@ Insert into CRM_USERS
 Insert into CRM_CUSTOMERS
   (ID_CUSTOMER, NAME, SURNAME, CREATIONDATE,PHOTOFIELD,CREATEDBY)
   values
-    (1, 'Mary Jane', 'Parker', CURRENT_DATE,'https://vignette.wikia.nocookie.net/avengers-assemble/images/7/77/Ultimate_Spiderman_1.jpg/revision/latest?cb=20160522155142',3);
+    (1, 'Mary Jane', 'Parker', CURRENT_DATE,'https://storage.cloud.google.com/crm-rest-api-images/maryjane.jpg?_ga=2.72422747.-977466062.1534120210',3);
 
 
 Insert into CRM_CUSTOMERS
   (ID_CUSTOMER, NAME, SURNAME, CREATIONDATE,PHOTOFIELD,CREATEDBY)
   values
-    (2, 'May', 'Parker', CURRENT_DATE,'https://vignette.wikia.nocookie.net/avengers-assemble/images/7/77/Ultimate_Spiderman_1.jpg/revision/latest?cb=20160522155142',3);
+    (2, 'May', 'Parker', CURRENT_DATE,'https://storage.cloud.google.com/crm-rest-api-images/MayParker.jpg?_ga=2.203931352.-977466062.1534120210',3);

@@ -1,9 +1,7 @@
 package com.theam.crmrestapi.model;
 
-
 import org.hibernate.annotations.Proxy;
 import org.hibernate.validator.constraints.SafeHtml;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +12,6 @@ import javax.persistence.*;
         {@NamedQuery(name="User.findAll", query="SELECT u FROM User u"),
          @NamedQuery(name="User.findByUsername", query="SELECT u FROM User u WHERE u.username=:username")}
 )
-
 public class User {
 
     @Id
@@ -42,10 +39,7 @@ public class User {
     @SafeHtml
     private String password;
 
-
-    public User() {
-
-    }
+    public User() { }
 
     public int getId() {
         return id;

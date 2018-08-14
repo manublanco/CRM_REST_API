@@ -1,10 +1,8 @@
 package com.theam.crmrestapi.resources;
 
-
 import com.theam.crmrestapi.model.User;
 import com.theam.crmrestapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -14,7 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-
 
 /**
  * The Class UserResource.
@@ -48,6 +45,7 @@ public class UserResource {
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
         }
+
         return Response.status(200).entity(user)
                 .contentLocation(new URI("/user/" + id))
                 .build();
@@ -67,16 +65,23 @@ public class UserResource {
     @RolesAllowed("ADMIN")
     public Response createUser(User user) throws URISyntaxException {
 
-        if (user.getName() == null || user.getSurname() == null ) {
+        if (user.getName() == null || user.getSurname() == null
+                || user.getUsername() == null || user.getPassword() == null) {
             return Response.status(400).entity("Please provide all mandatory inputs").build();
         }
+
+        User checkUser = userService.findUserByUsername(user.getUsername());
+
+        if (checkUser != null) {
+            return Response.status(400).entity("Username already taken").build();
+        }
+
         //the user is always created with the role "USER"
         //if we need to make him "ADMIN" we have to use the "makeAdmin" endpoint
         user.setRole(USER);
         userService.createUser(user);
 
         return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
-
     }
 
     @PUT
@@ -87,6 +92,7 @@ public class UserResource {
     public Response updateUser(@PathParam("id") int id, User userChanges) throws URISyntaxException {
 
         User user = userService.findUserById(id);
+
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
         }
@@ -99,9 +105,14 @@ public class UserResource {
             user.setSurname(userChanges.getSurname());
         }
 
-        if (userChanges.getRole() != null) {
-            user.setRole(userChanges.getRole());
+        if (userChanges.getUsername() != null) {
+            user.setUsername(userChanges.getUsername());
         }
+
+        if (userChanges.getPassword() != null) {
+            user.setPassword(userChanges.getPassword());
+        }
+
 
         userService.updateUser(user);
 
@@ -128,8 +139,8 @@ public class UserResource {
     @RolesAllowed("ADMIN")
     public Response changeRole(@PathParam("id") int id, @PathParam("isAdmin") boolean isAdmin) throws URISyntaxException {
 
-
         User user = userService.findUserById(id);
+
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
         }
@@ -143,7 +154,5 @@ public class UserResource {
         userService.updateUser(user);
 
         return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
-
     }
-
 }

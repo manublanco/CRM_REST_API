@@ -1,5 +1,7 @@
 package com.theam.crmrestapi.resources;
 
+import com.google.auth.oauth2.ServiceAccountCredentials;
+import com.google.cloud.storage.*;
 import com.theam.crmrestapi.model.Customer;
 import com.theam.crmrestapi.model.User;
 import com.theam.crmrestapi.services.CustomerService;
@@ -8,7 +10,6 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -19,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -26,11 +28,11 @@ import java.util.List;
 /**
  * The Class CustomerResource.
  */
-
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "customer")
 @Path("/customer")
 public class CustomerResource {
+
     /** The customer service. */
     @Autowired
     CustomerService customerService;
@@ -43,25 +45,21 @@ public class CustomerResource {
     @Produces("application/json")
     @RolesAllowed({"ADMIN","USER"})
     public List<Customer> getAllCustomers() {
-
         return customerService.findAllCustomers();
     }
-
 
     @GET
     @Path("/{id}")
     @Produces("application/json")
     @RolesAllowed({"ADMIN","USER"})
     public Response getCustomerById(@PathParam("id") int id) throws URISyntaxException {
-
         Customer customer = customerService.findCustomerById(id);
         if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Customer not found for ID: " + id).build();
         }
         return Response.status(200).entity(customer)
                 .contentLocation(new URI("/customer/" + id))
                 .build();
-
     }
 
     /**
@@ -77,22 +75,14 @@ public class CustomerResource {
     public Response createCustomer(@FormDataParam("file") InputStream file,
                                    @FormDataParam("file") FormDataContentDisposition disposition,
                                    @FormDataParam("customer") FormDataBodyPart customerJson,
-                                   @HeaderParam("authorization") String authorization) throws URISyntaxException {
+                                   @HeaderParam("authorization") String authorization) throws URISyntaxException, IOException {
 
+        //Check authenticated user
         User authenticatedUser = userService.authenticatedUser(authorization);
-
-
-        String uploadedFileLocation = "uploadImages/"
-                + disposition.getFileName();
-
-        writeToFile(file, uploadedFileLocation);
 
         customerJson.setMediaType(MediaType.APPLICATION_JSON_TYPE);
         Customer customer = customerJson.getValueAs(Customer.class);
 
-        System.out.println(customer.getName());
-
-        //TODO
         if (customer.getName() == null || customer.getSurname() == null) {
             return Response.status(400).entity("Please provide all mandatory inputs").build();
         }
@@ -104,22 +94,37 @@ public class CustomerResource {
         java.sql.Date date = new java.sql.Date(currentDate.getTime());
         customer.setCreationDate(date);
 
-        customerService.createCustomer(customer);
-        return Response.status(201).contentLocation(new URI("/customer/" + customer.getId())).build();
+        if (file != null) {
+            String fileName = customer.getName() +customer.getSurname();
+            String urlPhotoField = uploadToGoogleCloud(file, fileName);
+            customer.setPhotoField(urlPhotoField);
+        }
 
+        customerService.createCustomer(customer);
+
+        return Response.status(201).contentLocation(new URI("/customer/" + customer.getId())).build();
     }
 
     @PUT
     @Path("/{id}")
-    @Consumes("application/json")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/json")
     @RolesAllowed({"ADMIN","USER"})
-    public Response updateCustomer(@PathParam("id") int id, @HeaderParam("authorization") String authorization, Customer customerChanges) throws URISyntaxException {
+    public Response updateCustomer(@PathParam("id") int id,
+                                   @FormDataParam("file") InputStream file,
+                                   @FormDataParam("file") FormDataContentDisposition disposition,
+                                   @FormDataParam("customer") FormDataBodyPart customerJson,
+                                   @HeaderParam("authorization") String authorization) throws URISyntaxException, IOException {
 
         User authenticatedUser = userService.authenticatedUser(authorization);
 
+        customerJson.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+        Customer customerChanges = customerJson.getValueAs(Customer.class);
 
         Customer customer = customerService.findCustomerById(id);
+        if (customer == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Customer not found for ID: " + id).build();
+        }
 
         if (customerChanges.getName() != null) {
             customer.setName(customerChanges.getName());
@@ -134,9 +139,16 @@ public class CustomerResource {
         java.util.Date currentDate = calendar.getTime();
         java.sql.Date date = new java.sql.Date(currentDate.getTime());
         customer.setLastUpdate(date);
-        customerService.updateCustomer(customer);
-        return Response.status(201).contentLocation(new URI("/customer/" + customer.getId())).build();
 
+        if (file != null) {
+            String fileName = customer.getName() +customer.getSurname();
+            String urlPhotoField = uploadToGoogleCloud(file, fileName);
+            customer.setPhotoField(urlPhotoField);
+        }
+
+        customerService.updateCustomer(customer);
+
+        return Response.status(201).contentLocation(new URI("/customer/" + customer.getId())).build();
     }
 
     @DELETE
@@ -152,26 +164,28 @@ public class CustomerResource {
 
     }
 
-    // save uploaded file to new location
-    private void writeToFile(InputStream uploadedInputStream,
-                             String uploadedFileLocation) {
+  private String uploadToGoogleCloud(InputStream file, String fileName) throws IOException {
 
-        try {
-            OutputStream out = new FileOutputStream(new File(
-                    uploadedFileLocation));
-            int read = 0;
-            byte[] bytes = new byte[1024];
+      String SERVICE_ACCOUNT_JSON_PATH = "src/main/resources/googleCloud/crm-rest-api-64c3bf662117.json";
 
-            out = new FileOutputStream(new File(uploadedFileLocation));
-            while ((read = uploadedInputStream.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
-            }
-            out.flush();
-            out.close();
-        } catch (IOException e) {
+      Storage storage =
+              StorageOptions.newBuilder()
+                      .setCredentials(
+                              ServiceAccountCredentials.fromStream(
+                                      new FileInputStream(SERVICE_ACCOUNT_JSON_PATH)))
+                      .build()
+                      .getService();
 
-            e.printStackTrace();
-        }
-    }
+      List<Acl> acls = new ArrayList<>();
+      acls.add(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
 
+      Blob blob =
+              storage.create(
+                      BlobInfo.newBuilder("crm-rest-api-images", fileName + ".jpg")
+                              .setContentType("image/jpeg")
+                              .setAcl(acls).build(),
+                      file);
+
+      return blob.getMediaLink();
+     }
     }

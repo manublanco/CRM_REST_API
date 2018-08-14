@@ -79,12 +79,6 @@ public class SecurityFilter implements javax.ws.rs.container.ContainerRequestFil
             final String username = tokenizer.nextToken();
             final String password = tokenizer.nextToken();
 
-/*            //Verifying Username and password
-            if(!(username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("password"))){
-                requestContext.abortWith(ACCESS_DENIED);
-                return;
-            }*/
-
             //Verify user access
             if(method.isAnnotationPresent(RolesAllowed.class))
             {
