@@ -10,7 +10,7 @@ This application is made with Spring-boot so it is very easy to install and run.
 
 ## AUTHENTICATION AND AUTHORIZATION
 
-All the endpoints needs basic authentication with username and password to run. There are two different roles in this app, user role and admin role. An user can create customers, update customers, get info of customers and delete customers. An admin can do all the operations with customers and also create users, delete users, update users, get users info and also can grant admin permission to another user. 
+All the endpoints needs basic authentication with username and password to run. There are two different roles in this app, user role and admin role. An user can create customers, update customers, get info of customers and delete customers. An admin can do all the operations with customers and also create users, delete users, update users, get users info and also can grant admin role to another user. 
 
 At init 3 different users are created(1 ADMIN and 2 USERS). 
 
@@ -20,9 +20,10 @@ At init 3 different users are created(1 ADMIN and 2 USERS).
 |  Captain   |  1234     |USER
 |Spidey    | 1234|USER
 
-To do all the tests I use POSTMAN. Now I am going to explain how to test every endpoint and how to use postman to do it. 
 
 ## ENDPOINTS
+
+To do all the tests I use POSTMAN. Now I am going to explain how to test every endpoint and how to use postman to do it in cases that I think is needed.
 
 
 ### User endpoints
@@ -85,6 +86,19 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 
 #### Create User
 #### POST http://localhost:8080/user/
+
+To create an user you have to send a POST request with a JSON in the body. So, in POSTMAN you have to select POST request and then in the body part, select raw and insert a JSON like this: 
+```javascript
+{
+    "name": "Hank",
+    "surname": "Pym",
+    "username": "Pym",
+    "password": "1234"
+}
+```
+
+The username has to be unique, so if the username is already taken the endpoint will show a 400 Bad Request with the message "Username already taken"
+
 
 #### Update User
 #### PUT http://localhost:8080/user/{id}
