@@ -5,14 +5,14 @@ will work as the backend side for a CRM interface.
 
 ## SETUP
 
-This application is made with Spring-boot so it is very easy to install and run. Also, I used an H2 Database and there is no need to configure nothing else. The only thing you need to do is run this command:
-> `mvn spring-boot:run`
+This application is made with Spring-boot so it is very easy to install and run. Also, I used an H2 Database and there is no need to configure anything else. The only thing you need to do is run this command inside the project folder (I assume you already have a Maven installation in your computer) :
+> `mvn clean spring-boot:run`
 
 ## AUTHENTICATION AND AUTHORIZATION
 
 All the endpoints needs basic authentication with username and password to run. There are two different roles in this app, user role and admin role. An user can create customers, update customers, get info of customers and delete customers. An admin can do all the operations with customers and also create users, delete users, update users, get users info and also can grant admin role to another user. 
 
-At init 3 different users are created(1 ADMIN and 2 USERS). 
+At init the app creates 3 different users (1 ADMIN and 2 USERS). 
 
 |  USERNAME|PASSWORD  |ROLE|  
 |--|--|--|
@@ -111,14 +111,16 @@ By default, all users are created with the USER role.
 
 Select a PUT request in Postman.
 
-To update the user with the id {id} you have to send a JSON like when you created the user but only with the fields that you want to change. Example with id=4 
+To update the user with the id {id} you have to send a JSON just like when you created the user but only with the fields that you want to change. Example with id=4 
+
+http://localhost:8080/user/4
 
 ```javascript
 {
     "username": "Ant-man"
 }
 ```
-If the user with that id doesn' exist you will receive a 404 Error with the message "User not found for ID: 1"
+If the user with that id doesn't exist you will receive a 404 Error with the message "User not found for ID: 1"
 
 
 #### Delete User
@@ -126,6 +128,8 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 
 Select DELETE request in Postman and you only have to specified the id of the user you want to delete. 
 If the user with that id doesn' exist you will receive a 404 Error with the message "User not found for ID: 1"
+
+http://localhost:8080/user/4
 
 #### Change role
 #### PUT http://localhost:8080/user/{id}/isAdmin/{isAdmin}
@@ -214,7 +218,7 @@ You will receive a JSON with the information of that particular customer.
 }
 ```
 
-If the user with that id doesn' exist you will receive a 404 Error with the message "Customer not found for ID: 1"
+If the user with that id doesn't exist you will receive a 404 Error with the message "Customer not found for ID: 1"
 
 
 #### Create Customer
