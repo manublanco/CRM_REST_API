@@ -42,11 +42,10 @@ public class UserResource {
     public Response getUserById(@PathParam("id") int id) throws URISyntaxException {
 
         User user = userService.findUserById(id);
-        if (user == null) {
+        if (null == user) {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
         }
-
-        return Response.status(200).entity(user)
+        return Response.status(Response.Status.OK).entity(user)
                 .contentLocation(new URI("/user/" + id))
                 .build();
     }
@@ -65,23 +64,23 @@ public class UserResource {
     @RolesAllowed("ADMIN")
     public Response createUser(User user) throws URISyntaxException {
 
-        if (user.getName() == null || user.getSurname() == null
-                || user.getUsername() == null || user.getPassword() == null) {
-            return Response.status(400).entity("Please provide all mandatory inputs").build();
+        if ((null == user.getName()) || (null == user.getSurname())
+            || (null == user.getUsername()) || (null == user.getPassword())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Please provide all mandatory inputs").build();
         }
 
         User checkUser = userService.findUserByUsername(user.getUsername());
 
-        if (checkUser != null) {
-            return Response.status(400).entity("Username already taken").build();
+        if (null != checkUser) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Username already taken").build();
         }
 
         //the user is always created with the role "USER"
-        //if we need to make him "ADMIN" we have to use the "makeAdmin" endpoint
+        //if we need to make him "ADMIN" we have to use the "changeRole" endpoint
         user.setRole(USER);
         userService.createUser(user);
 
-        return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+        return Response.status(Response.Status.CREATED).contentLocation(new URI("/user/" + user.getId())).build();
     }
 
     @PUT
@@ -93,30 +92,30 @@ public class UserResource {
 
         User user = userService.findUserById(id);
 
-        if (user == null) {
+        if (null == user) {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
         }
 
-        if (userChanges.getName() != null) {
+        if (null != userChanges.getName()) {
             user.setName(userChanges.getName());
         }
 
-        if (userChanges.getSurname() != null) {
+        if (null != userChanges.getSurname()) {
             user.setSurname(userChanges.getSurname());
         }
 
-        if (userChanges.getUsername() != null) {
+        if (null != userChanges.getUsername()) {
             user.setUsername(userChanges.getUsername());
         }
 
-        if (userChanges.getPassword() != null) {
+        if (null != userChanges.getPassword()) {
             user.setPassword(userChanges.getPassword());
         }
 
 
         userService.updateUser(user);
 
-        return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+        return Response.status(Response.Status.OK).contentLocation(new URI("/user/" + user.getId())).build();
 
     }
 
@@ -141,7 +140,7 @@ public class UserResource {
 
         User user = userService.findUserById(id);
 
-        if (user == null) {
+        if (null == user) {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found with ID: " + id).build();
         }
 
@@ -153,6 +152,6 @@ public class UserResource {
 
         userService.updateUser(user);
 
-        return Response.status(201).contentLocation(new URI("/user/" + user.getId())).build();
+        return Response.status(Response.Status.OK).contentLocation(new URI("/user/" + user.getId())).build();
     }
 }

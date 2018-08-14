@@ -56,7 +56,7 @@ public class SecurityFilter implements javax.ws.rs.container.ContainerRequestFil
             final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
 
             //If no authorization information present; block access
-            if(authorization == null || authorization.isEmpty())
+            if((null == authorization) || authorization.isEmpty())
             {
                 requestContext.abortWith(ACCESS_DENIED);
                 return;
@@ -66,7 +66,7 @@ public class SecurityFilter implements javax.ws.rs.container.ContainerRequestFil
             final String encodedUserPassword = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
 
             //Decode username and password
-            String usernameAndPassword = null;
+            String usernameAndPassword;
             try {
                 usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword));
             } catch (Exception e) {
@@ -83,7 +83,7 @@ public class SecurityFilter implements javax.ws.rs.container.ContainerRequestFil
             if(method.isAnnotationPresent(RolesAllowed.class))
             {
                 RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-                Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
+                Set<String> rolesSet = new HashSet<>(Arrays.asList(rolesAnnotation.value()));
 
                 //Is user valid?
                 if( ! isUserAllowed(username, password, rolesSet))

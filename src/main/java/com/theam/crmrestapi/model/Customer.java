@@ -17,16 +17,13 @@ public class Customer {
     private int id;
 
     @Column(name = "NAME", nullable = false)
-    @SafeHtml
-    private String name;
+    private @SafeHtml String name;
 
     @Column(name = "SURNAME", nullable = false)
-    @SafeHtml
-    private String surname;
+    private @SafeHtml String surname;
 
     @Column(name = "PHOTOFIELD")
-    @SafeHtml
-    private String photoField;
+    private @SafeHtml String photoField;
 
     @OneToOne
     @JoinColumn(name = "CREATEDBY")

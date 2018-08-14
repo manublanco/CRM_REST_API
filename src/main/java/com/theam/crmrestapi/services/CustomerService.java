@@ -53,7 +53,7 @@ public class CustomerService {
     /**
      * Delete the customer.
      *
-     * @param id
+     * @param id the customer id
      *
      */
     public boolean deleteCustomerById(int id) {

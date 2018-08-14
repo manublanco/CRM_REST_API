@@ -54,10 +54,10 @@ public class CustomerResource {
     @RolesAllowed({"ADMIN","USER"})
     public Response getCustomerById(@PathParam("id") int id) throws URISyntaxException {
         Customer customer = customerService.findCustomerById(id);
-        if (customer == null) {
+        if (null == customer) {
             return Response.status(Response.Status.NOT_FOUND).entity("Customer not found for ID: " + id).build();
         }
-        return Response.status(200).entity(customer)
+        return Response.status(Response.Status.OK).entity(customer)
                 .contentLocation(new URI("/customer/" + id))
                 .build();
     }
@@ -77,16 +77,15 @@ public class CustomerResource {
                                    @FormDataParam("customer") FormDataBodyPart customerJson,
                                    @HeaderParam("authorization") String authorization) throws URISyntaxException, IOException {
 
-        //Check authenticated user
-        User authenticatedUser = userService.authenticatedUser(authorization);
-
         customerJson.setMediaType(MediaType.APPLICATION_JSON_TYPE);
         Customer customer = customerJson.getValueAs(Customer.class);
 
-        if (customer.getName() == null || customer.getSurname() == null) {
-            return Response.status(400).entity("Please provide all mandatory inputs").build();
+        if ((null == customer.getName()) || (null == customer.getSurname())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Please provide all mandatory inputs").build();
         }
 
+        //Check authenticated user
+        User authenticatedUser = userService.authenticatedUser(authorization);
         customer.setCreatedBy(authenticatedUser);
 
         Calendar calendar = Calendar.getInstance();
@@ -95,14 +94,14 @@ public class CustomerResource {
         customer.setCreationDate(date);
 
         if (file != null) {
-            String fileName = customer.getName() +customer.getSurname();
+            String fileName = customer.getName() + customer.getSurname();
             String urlPhotoField = uploadToGoogleCloud(file, fileName);
             customer.setPhotoField(urlPhotoField);
         }
 
         customerService.createCustomer(customer);
 
-        return Response.status(201).contentLocation(new URI("/customer/" + customer.getId())).build();
+        return Response.status(Response.Status.CREATED).contentLocation(new URI("/customer/" + customer.getId())).build();
     }
 
     @PUT
@@ -116,39 +115,40 @@ public class CustomerResource {
                                    @FormDataParam("customer") FormDataBodyPart customerJson,
                                    @HeaderParam("authorization") String authorization) throws URISyntaxException, IOException {
 
-        User authenticatedUser = userService.authenticatedUser(authorization);
 
         customerJson.setMediaType(MediaType.APPLICATION_JSON_TYPE);
         Customer customerChanges = customerJson.getValueAs(Customer.class);
 
         Customer customer = customerService.findCustomerById(id);
-        if (customer == null) {
+        if (null == customer) {
             return Response.status(Response.Status.NOT_FOUND).entity("Customer not found for ID: " + id).build();
         }
 
-        if (customerChanges.getName() != null) {
+        if (null != customerChanges.getName()) {
             customer.setName(customerChanges.getName());
         }
 
-        if (customerChanges.getSurname() != null) {
+        if (null != customerChanges.getSurname()) {
             customer.setSurname(customerChanges.getSurname());
         }
 
+        User authenticatedUser = userService.authenticatedUser(authorization);
         customer.setUpdatedBy(authenticatedUser);
+
         Calendar calendar = Calendar.getInstance();
         java.util.Date currentDate = calendar.getTime();
         java.sql.Date date = new java.sql.Date(currentDate.getTime());
         customer.setLastUpdate(date);
 
-        if (file != null) {
-            String fileName = customer.getName() +customer.getSurname();
+        if (null != file) {
+            String fileName = customer.getName() + customer.getSurname();
             String urlPhotoField = uploadToGoogleCloud(file, fileName);
             customer.setPhotoField(urlPhotoField);
         }
 
         customerService.updateCustomer(customer);
 
-        return Response.status(201).contentLocation(new URI("/customer/" + customer.getId())).build();
+        return Response.status(Response.Status.CREATED).contentLocation(new URI("/customer/" + customer.getId())).build();
     }
 
     @DELETE
@@ -160,7 +160,7 @@ public class CustomerResource {
         if (!eliminated) {
             return Response.status(Response.Status.NOT_FOUND).entity("Customer not found with ID: " + id).build();
         }
-        return Response.status(200).build();
+        return Response.status(Response.Status.OK).build();
 
     }
 

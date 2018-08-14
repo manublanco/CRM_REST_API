@@ -19,7 +19,7 @@ public class CustomerDao {
     /**
      * Creates the customer
      *
-     * @param   customer
+     * @param   customer the customer
      */
     public void create(Customer customer) {
         entityManager.persist(customer);
@@ -49,7 +49,7 @@ public class CustomerDao {
     /**
      * Update the customer
      *
-     * @param   customer
+     * @param   customer the customer
      */
     public void update (Customer customer) {
         entityManager.merge(customer);
@@ -62,9 +62,8 @@ public class CustomerDao {
      */
     @Transactional
     public boolean delete(int id) {
-
         Customer customer = getCustomerById(id);
-        if (customer != null) {
+        if (null != customer) {
             entityManager.remove(customer);
             return true;
         }

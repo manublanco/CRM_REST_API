@@ -67,7 +67,7 @@ public class UserDao {
     /**
      * Update the user
      *
-     * @param   user
+     * @param   user the user
      */
     public void update (User user) {
         entityManager.merge(user);
@@ -76,12 +76,12 @@ public class UserDao {
     /**
      * Delete the user
      *
-     * @param   id
+     * @param   id the user id
      */
     @Transactional
     public boolean delete(int id) {
         User user = getUserById(id);
-        if (user != null) {
+        if (null != user) {
             entityManager.remove(user);
             return true;
         }

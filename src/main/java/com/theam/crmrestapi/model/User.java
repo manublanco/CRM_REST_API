@@ -10,8 +10,7 @@ import javax.persistence.*;
 @Table(name = "CRM_USERS")
 @NamedQueries(
         {@NamedQuery(name="User.findAll", query="SELECT u FROM User u"),
-         @NamedQuery(name="User.findByUsername", query="SELECT u FROM User u WHERE u.username=:username")}
-)
+         @NamedQuery(name="User.findByUsername", query="SELECT u FROM User u WHERE u.username=:username")})
 public class User {
 
     @Id
@@ -20,26 +19,19 @@ public class User {
     private int id;
 
     @Column(name = "NAME", nullable = false)
-    @SafeHtml
-    private String name;
+    private @SafeHtml String name;
 
     @Column(name = "SURNAME", nullable = false)
-    @SafeHtml
-    private String surname;
+    private @SafeHtml String surname;
 
-    @Column(name ="ROLE", nullable = false)
-    @SafeHtml
-    private String role;
+    @Column(name = "ROLE", nullable = false)
+    private @SafeHtml String role;
 
     @Column(name = "USERNAME")
-    @SafeHtml
-    private String username;
+    private @SafeHtml String username;
 
     @Column(name = "PASSWORD")
-    @SafeHtml
-    private String password;
-
-    public User() { }
+    private @SafeHtml String password;
 
     public int getId() {
         return id;

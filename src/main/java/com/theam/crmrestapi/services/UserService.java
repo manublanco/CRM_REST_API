@@ -66,7 +66,7 @@ public class UserService {
     /**
      * Find the authenticated user with the authorization header
      *
-     * @param authorization
+     * @param authorization the authorization header
      *
      */
     public User authenticatedUser(String authorization) {
