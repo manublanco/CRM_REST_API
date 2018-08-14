@@ -25,6 +25,8 @@ At init 3 different users are created(1 ADMIN and 2 USERS).
 
 To do all the tests I use POSTMAN. Now I am going to explain how to test every endpoint and how to use postman to do it in cases that I think is needed.
 
+All endpoints needs to be authenticated. In Postman you can do this in the section Authorization, then select Basic Authorization and use the credentials of one of the users already created.
+
 
 ### User endpoints
 
@@ -192,6 +194,7 @@ If you send a GET request in POSTMAN to this endpoint, you will receive a list o
 If you send a GET request with a specific id, for instance: http://localhost:8080/customer/1
 
 You will receive a JSON with the information of that particular customer.
+```javascript
 {
     "id": 1,
     "name": "Mary Jane",
@@ -209,6 +212,7 @@ You will receive a JSON with the information of that particular customer.
     "updatedBy": null,
     "lastUpdate": null
 }
+```
 
 If the user with that id doesn' exist you will receive a 404 Error with the message "Customer not found for ID: 1"
 
@@ -216,8 +220,43 @@ If the user with that id doesn' exist you will receive a 404 Error with the mess
 #### Create Customer
 #### POST http://localhost:8080/customer/
 
+POST request in Postman.
+
+Then you have to select form-data and add two keys, "file"(type file) and "customer" (type text).
+In file, now you have the option to upload an image. This image will be upload to Google Cloud Storage and save the url in the PhotoField of the customer. 
+
+Into the customer key you have to send a JSON like this example:
+```javascript
+{
+    "name": "Natasha",
+    "surname": "Romanova"
+}
+```
+The only fields mandatory are name and surname. 
+
+The file is optional.
+
+The user who created the customer will be stored in the field "CreatedBy".
+
+
 #### Update Customer
 #### PUT http://localhost:8080/customer/{id}
+
+PUT request in Postman.
+
+Then you have to select form-data and add two keys, "file"(type file) and "customer" (type text).
+In file, now you have the option to upload an image. This image will be upload to Google Cloud Storage and save the url in the PhotoField of the customer. 
+
+Into the customer key you have to send a JSON like this example:
+```javascript
+{
+    "surname": "Stark"
+}
+```
+
+Only send the changes, it is not necessary to send all the data. 
+
+The user who updated the customer will be stored in the field "CreatedBy".
 
 #### Delete Customer
 #### DELETE http://localhost:8080/customer/{id}
